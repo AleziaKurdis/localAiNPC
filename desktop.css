@@ -1,0 +1,165 @@
+@font-face {
+    font-family: FiraSans-SemiBold;
+    src: url(fonts/FiraSans-SemiBold.ttf);
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #111111;
+    overflow: hidden;
+}
+
+#viewport {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #111111;
+}
+
+#chat {
+    width: 100%;
+    height: 439px;
+    color: #FFFFFF;
+    background-color: #333333;
+    overflow-x: hidden;
+    padding: 5px;
+    box-sizing: border-box;
+}
+tr.chat {
+    height: 439px;
+    width: 99%;
+    vertical-align: top;
+    text-align: left;
+}
+tr.typingBar {
+    height: 59px;
+    width:100%;
+    text-align: left;
+    vertical-align: middle;
+}
+#prefocus {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-family: FiraSans-SemiBold;
+    font-size: 12px;
+    height: 46px;
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #cccccc;
+    resize: none;
+    background-color: rgba(0,0,0,0);
+    color: #ffffff;
+    margin-left: 1px;
+}
+#inputUser {
+    font-family: FiraSans-SemiBold;
+    font-size: 12px;
+    height: 46px;
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #cccccc;
+    resize: none;
+    background-color: #222222;
+    color: #ffffff;
+    margin-left: 1px;
+}
+#emitBtn {
+    font-family: FiraSans-SemiBold;
+    font-size: 30px;
+    text-align: center;
+    background-color: #3e6b4b;
+    color: #ffffff;
+    border-radius: 12px;
+    padding-left: 6px;
+    padding-right: 6px;
+    width: 40px;
+    height: 40px;
+    box-shadow: 2px 2px 5px #000000;
+    margin-top: -5px;
+}
+div.NPC {
+    margin: 6px 60px 6px 6px;
+    background-color: #3d0d0d;
+    font-family: FiraSans-SemiBold;
+    font-size: 12px;
+    text-align: left;
+    padding: 7px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px #000000;
+}
+
+div.USER {
+    margin: 6px 6px 6px 60px;
+    background-color: #1f1f1f;
+    font-family: FiraSans-SemiBold;
+    font-size: 12px;
+    text-align: left;
+    padding: 7px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px #000000;
+}
+div.timeInfo {
+    margin: 6px;
+    font-family: FiraSans-SemiBold;
+    font-size: 12px;
+    text-align: left;
+    padding: 7px;
+    border: 0;
+    color: #c2ffca;
+}
+:focus {
+    outline: none;
+}
+div.processing {
+    width: 100%;
+    text-align: center;
+}
+span.speaker {
+    color: #ffeda3;
+
+}
+img.thinking {
+    border-radius: 24px;
+    height: 48px;
+}
+.wrapper {
+    width: 100%;
+    position: relative;
+    display: inline-block;
+}
+
+#chat::-webkit-scrollbar {
+    width: 12px;
+}
+
+#chat::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 6px;
+}
+
+#chat::-webkit-scrollbar-thumb {
+    background: #666666;
+    border-radius: 6px;
+    border: 2px solid #1a1a1a;
+}
+
+#chat::-webkit-scrollbar-thumb:hover {
+    background: #999999;
+}
+
+#enterOptLabel {
+    font-family: FiraSans-SemiBold;
+    font-size: 11px;
+    color: #3e6b4b;
+}
+#enterOpt {
+    accent-color: #3e6b4b;
+}
+
+ 

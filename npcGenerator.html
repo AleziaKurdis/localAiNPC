@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<!--
+    npcGenerator.html
+
+    Created by Alezia Kurdis, May 7th 2026.
+    Copyright 2026 Overte e.V.
+
+    HTML UI for the application NPC Generator (local AI).
+
+    Distributed under the Apache License, Version 2.0.
+    See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script>
+            var channel = "overte.application.more.localNpcGenerator";
+
+            //Paths
+            var thisPageName = "npcGenerator.html";       
+            var currentPath = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            var ROOTPATH = currentPath.replace(thisPageName, "");
+
+        </script>
+        <style>
+            @font-face {
+                font-family: FiraSans-SemiBold;
+                src: url(fonts/FiraSans-SemiBold.ttf);
+            }
+
+            @font-face {
+                font-family: FiraSans-Regular;
+                src: url(fonts/FiraSans-Regular.ttf);
+            }
+
+            html {
+                width: 100%;
+                height: 100%;
+            }
+
+            body {
+                background: #222222;
+                font-family: FiraSans-SemiBold;
+                font-size: 14px;
+                color: #FFFFFF;
+                text-decoration: none;
+                font-style: normal;
+                font-variant: normal;
+                text-transform: none;
+            }
+            
+            button {
+                font-family: FiraSans-SemiBold;
+                background-color: #555588;
+                font-size: 12px;
+                color: #eeeeee;
+                border-radius: 3px;
+                border: 0px solid #000000;
+                transition-duration: 0.1s;
+                padding: 3px 5px 3px 5px;
+                box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+            }
+
+            button:hover {
+                background-color: #444477;
+                color: #ffffff;
+            }
+            span.instruction {
+                font-family: FiraSans-Regular;
+                color:#9ce4ff;
+                font-size: 10px;
+                font-style: italic;
+            }
+            span.red {
+                color: #ff3d0d;
+            }
+            #temper {
+                border: 1px solid #000000;
+                font-family: FiraSans-Regular;
+                font-size: 12px;
+                color:#000000;
+                background-color: #bbbbbb;
+                padding: 3px;
+            }
+            textarea {
+                width: 98%;
+            }
+            input.textbox {
+                width: 98%;
+            }
+            :focus {
+                outline: none;
+            }
+            #userdataJson {
+                background-color: #333333;
+                color: #aaaaaa;
+                width: 98%;
+            }
+            #error {
+                color: #ff3021;
+                font-family: FiraSans-SemiBold;
+                font-size: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        NPC name<span class="red">*</span>:<br><input class="textbox" type="text" id="npcName" onInput="genNPC();"><br>
+        <span class="instruction">(Character full name.)</span><br><br>
+        NPC Cluster Code<span class="red">*</span>: <button onclick="setUUid();">Randomize</button><br><input class="textbox" type="text" id="npcId" onInput="genNPC();"><br>
+        <span class="instruction">(Unique id, or any project code. This is to avoid the conversation to be mixed with a possible character with the same name from another creator. Must be at least 5 characters.)</span><br><br>
+        NPC Greeting sentence<span class="red">*</span>:<br><input class="textbox" type="text" id="npcGreeting" onInput="genNPC();"><br>
+        <span class="instruction">(What the NPC will say the first time a user will approach.)</span><br><br>
+        NPC Profile<span class="red">*</span>:<br>
+        <textarea id="profile" rows="5" wrap="soft" onInput="genNPC();"></textarea><br>
+        <span class="instruction">(Profile of the NPC. description, physical details, psychological profile, character historical events...)</span><br><br>
+        NPC Temper<span class="red">*</span>:
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 5%; text-align: right;"><button onClick = "getPreviousTemper();">&#9668;</button></td>
+                <td style="width: 90%; text-align: left;"><div id="temper"></div></td>
+                <td style="width: 5%; text-align: left;"><button onClick = "getNextTemper();">&#9658;</button></td>
+            </tr>
+        </table>
+        <input type="hidden" id="temperature" value = "0.7">
+
+        <span class="instruction">(Adjustment for the temper and creativity of the NPC.)</span><br>
+        <hr>
+        <br>
+        Context:<br>
+        <textarea id="context" rows="5" wrap="soft" onInput="genNPC();"></textarea><br>
+        <span class="instruction">(Description of the environment, the story line. Any contextual details... You can also have multiple instance of your character but with different context.)</span><br>
+        <hr>
+        <br>
+
+    
+        NPC 3d Model Url:<br><input class="textbox" type="text" id="npcModelUrl" onInput="genNPC();"><br>
+        <span class="instruction">(Any 3d model that will personify the character in world.)</span><br><br>
+        NPC Animation Url:<br><input class="textbox" type="text" id="npcAnimationUrl" onInput="genNPC();"><br>
+        <span class="instruction">(Animation given to your 3d model.)</span><br><br>
+        Interaction Radius<span class="red">*</span>: <input type="number" id="radius" value="2" min="1" step="1" size="5" onInput="genNPC();"> meters.<br>
+        <span class="instruction">(Range from the NPC where the resident chat window will raise.)</span><br><br>
+        <hr>
+        JSON: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button onClick="copyText('userdataJson');">Copy</button><br><br>
+        <div id="error"></div>
+        <textarea id="userdataJson" rows="13" wrap="soft" onInput="pasteData();"></textarea><br><br>
+        
+        <button onClick="importNPCinWorld();">IMPORT NPC IN WORLD</button>
+        <hr>
+        <div style="text-align: right; width:100%;">
+            <button id="killAllChatHistoryBtn" onClick = "killAllCHatHistory();">Delete All NPC's chat history</button>
+        </div>
+        <script>
+            //UI functions here
+            let temperatures = [
+                {"temperature": 0.1, "description": "0.1 - DISCIPLINED: Very stable, strict, predictable."},
+                {"temperature": 0.2, "description": "0.2 - DISCIPLINED: Focused, controlled, reliable."},
+                {"temperature": 0.3, "description": "0.3 - DISCIPLINED: Reliable, slightly natural tone."},
+                {"temperature": 0.4, "description": "0.4 - DISCIPLINED: Conservative but conversational."},
+                {"temperature": 0.5, "description": "0.5 - CREDIBLE: Balanced and conversational."},
+                {"temperature": 0.6, "description": "0.6 - CREDIBLE: More expressive and varied."},
+                {"temperature": 0.7, "description": "0.7 - CREDIBLE: Creative but structured, good for RP."},
+                {"temperature": 0.8, "description": "0.8 - CREDIBLE: More emotional and spontaneous."},
+                {"temperature": 0.9, "description": "0.9 - ECCENTRIC: Strong personality, less predictable."},
+                {"temperature": 1.0, "description": "1.0 - ECCENTRIC: Very creative, less consistent."},
+                {"temperature": 1.1, "description": "1.1 - ECCENTRIC: Starts getting chaotic and uneven."},
+                {"temperature": 1.2, "description": "1.2 - ECCENTRIC: Unstable, imaginative, unpredictable."},
+                {"temperature": 1.3, "description": "1.3 - CHAOTIC: High randomness, drifting ideas."},
+                {"temperature": 1.4, "description": "1.4 - CHAOTIC: Strange, erratic, inconsistent replies."},
+                {"temperature": 1.5, "description": "1.5 - CHAOTIC: Wild, surreal, unstable output."}
+            ];
+
+            function killAllCHatHistory() {
+                let messageToSend = {
+                    "channel": channel,
+                    "action": "CLEAR_ALL_HISTORY"
+                };
+                EventBridge.emitWebEvent(JSON.stringify(messageToSend));
+            }
+            
+            function setUUid() {
+                document.getElementById("npcId").value = generateUUID();
+                genNPC();
+            }
+            
+            function generateUUID() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16 | 0;
+                    var v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+            }
+            
+            function getPreviousTemper() {
+                let previous = -1;
+                let currentTemper = parseFloat(document.getElementById("temperature").value);
+                for (let i = 0; i < temperatures.length; i++) {
+                    if (temperatures[i].temperature === currentTemper) {
+                        if (i === 0) {
+                            previous = 0;
+                        } else {
+                            previous = i - 1;
+                        }
+                        break;
+                    }
+                }
+                document.getElementById("temperature").value = temperatures[previous].temperature;
+                document.getElementById("temper").innerHTML = temperatures[previous].description;
+                genNPC();
+            }
+            
+            function getNextTemper() {
+                let next = -1;
+                let currentTemper = parseFloat(document.getElementById("temperature").value);
+                for (let i = 0; i < temperatures.length; i++) {
+                    if (temperatures[i].temperature === currentTemper) {
+                        if (i === temperatures.length - 1) {
+                            next = temperatures.length - 1;
+                        } else {
+                            next = i + 1;
+                        }
+                        break;
+                    }
+                }
+                document.getElementById("temperature").value = temperatures[next].temperature;
+                document.getElementById("temper").innerHTML = temperatures[next].description;
+                genNPC();
+            }
+            
+            function getTemperDescription(temperValue) {
+                let descriptionFound = "";
+                for (let i = 0; i < temperatures.length; i++) {
+                    if (temperatures[i].temperature === temperValue) {
+                        descriptionFound = temperatures[i].description;
+                        break;
+                    }
+                }
+                return descriptionFound;
+            }
+            
+            function isContainingBadChar(str) {
+                const avoid = ["'", '"', "&", "<", ">", "[", "]", "\\"];
+                let found = false;
+                for (let i = 0; i < avoid.length; i++) {
+                    if (str.indexOf(avoid[i]) !== -1) {
+                        found = true;
+                        break;
+                    }
+                
+                }
+                return found;
+            }
+
+            function pasteData() {
+                let data;
+                const text = document.getElementById("userdataJson").value;
+                document.getElementById("error").innerHTML = "";
+                try {
+                    data = JSON.parse(text);
+                    if (data.name === undefined || data.id === undefined
+                    || data.profile === undefined || data.greeting === undefined
+                    || data.context === undefined || data.temperature === undefined
+                    || data.radius === undefined || data.npcModelUrl === undefined
+                    || data.npcAnimationUrl === undefined ) {
+                        document.getElementById("error").innerHTML = "Invalid data structure.";
+                    } else {
+                        document.getElementById("npcName").value = data.name;
+                        document.getElementById("npcId").value = data.id;
+                        document.getElementById("npcGreeting").value = data.greeting;
+                        document.getElementById("profile").value = data.profile;
+                        document.getElementById("context").value = data.context;
+                        document.getElementById("temperature").value = data.temperature;
+                        document.getElementById("temper").innerHTML = getTemperDescription(data.temperature);
+                        document.getElementById("npcModelUrl").value = data.npcModelUrl;
+                        document.getElementById("npcAnimationUrl").value = data.npcAnimationUrl;
+                        document.getElementById("radius").value = data.radius;
+                        genNPC();
+                    }
+                    
+                } catch (err) {
+                    document.getElementById("error").innerHTML = "Parsing failed: " + err;
+                }
+            }
+
+            function genNPC() {
+                let name = document.getElementById("npcName").value;
+                let id = document.getElementById("npcId").value;
+                let greeting = document.getElementById("npcGreeting").value;
+                let profile = document.getElementById("profile").value;
+                let temperature = parseFloat(document.getElementById("temperature").value);
+                let context = document.getElementById("context").value;
+                let npcModelUrl = document.getElementById("npcModelUrl").value;
+                let npcAnimationUrl = document.getElementById("npcAnimationUrl").value;
+                let radius = parseFloat(document.getElementById("radius").value);
+                let errorDiv = document.getElementById("error");
+
+                errorDiv.innerHTML = "";
+                if (name === "") {
+                    errorDiv.innerHTML = "'NPC name' is mandatory.";
+                    return;
+                }
+                if (isContainingBadChar(name)) {
+                    errorDiv.innerHTML = "'NPC name' must not contain: ' \" & < > [ ] \\";
+                    return;
+                }
+                if (id.length < 5) {
+                    errorDiv.innerHTML = "'NPC Cluster Code' must be at least 5 characters long.";
+                    return;
+                }
+                if (isContainingBadChar(id)) {
+                    errorDiv.innerHTML = "'NPC Cluster Code' must not contain: ' \" & < > [ ] \\";
+                    return;
+                }
+                if (greeting === "") {
+                    errorDiv.innerHTML = "'NPC Greeting sentence' is mandatory.";
+                    return;
+                }
+                if (profile === "") {
+                    errorDiv.innerHTML = "'NPC Profile' is mandatory.";
+                    return;
+                }
+                if (isNaN(radius) || radius < 0.5) {
+                    errorDiv.innerHTML = "'Interaction Radius' must be a valid number greater than '0.5'.";
+                    return;
+                }
+
+                let jsonUserData = {
+                    "name": name,
+                    "id": id,
+                    "profile": profile,
+                    "greeting": greeting,
+                    "context": context,
+                    "temperature": temperature,
+                    "radius": radius,
+                    "npcModelUrl": npcModelUrl,
+                    "npcAnimationUrl": npcAnimationUrl
+                };
+                document.getElementById("userdataJson").value = JSON.stringify(jsonUserData, null, 4);
+            }
+
+            function importNPCinWorld() {
+                const strNpcJson = document.getElementById("userdataJson").value;
+                if (strNpcJson !== "") {
+                    const npcJson = JSON.parse(strNpcJson);
+                    let messageToSend = {
+                        "channel": channel,
+                        "action": "GENERATE_NPC",
+                        "soul": npcJson
+                    };
+                    EventBridge.emitWebEvent(JSON.stringify(messageToSend));
+                }
+            }
+
+            function copyText(elementId) {
+                EventBridge.emitWebEvent(JSON.stringify({
+                    "channel": channel,
+                    "action": "copyText",
+                    "copiedText": document.getElementById(elementId).value
+                }));
+            }
+            
+            document.getElementById("temper").innerHTML = getTemperDescription(0.7);
+            genNPC();
+        </script>
+    </body>
+</html>
