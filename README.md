@@ -1,10 +1,10 @@
-# Optional Local AI Non-Player Character (NPC) System
+# Optional AI Non-Player Character (NPC) System
 
 ## Overview
 
-The **Optional Local AI Non-Player Character (NPC)** approach is a design pattern for integrating AI-driven characters into virtual worlds while prioritizing **privacy, cost efficiency, and user control**.
+The **Optional AI Non-Player Character (NPC)** approach is a design pattern for integrating AI-driven characters into virtual worlds while prioritizing **privacy, cost efficiency, and user control**.
 
-Instead of relying on centralized cloud-based AI services, NPCs are designed to operate **only when a local AI runtime is available on the user’s machine** (such as Ollama or compatible OpenAI-type local endpoints). If no local AI is installed, the NPCs simply do not activate.
+Instead of relying on centralized cloud-based AI services, NPCs are designed to operate **only when a local AI runtime is available on the user’s machine** (such as Ollama or compatible OpenAI-type local endpoints). If no AI is installed, the NPCs simply do not activate.
 
 This creates a **graceful, opt-in AI layer** in the environment rather than a mandatory dependency.
 
@@ -27,9 +27,9 @@ Each NPC is an **empty interactive entity** in the world that contains:
 - A **personality profile stored in `userData`**
 - Optional contextual memory tied to the world or storyline
 
-The NPC does not itself “think” or generate responses. Instead, it acts as a **bridge between the environment and the user’s local AI model**.
+The NPC does not itself “think” or generate responses. Instead, it acts as a **bridge between the environment and the user’s AI model (Local or Cloud)**.
 
-If no local AI service is detected, the NPC remains inactive or invisible.
+If no AI service is detected, the NPC remains inactive or invisible.
 
 ---
 
@@ -63,7 +63,7 @@ Cloud-based AI systems introduce recurring costs:
 - Infrastructure scaling costs for hosting NPC logic
 - Maintenance overhead for real-time interaction systems
 
-If every NPC in a world required cloud inference, the cost would scale quickly and become impractical.
+If every NPC in a world required cloud inference, the cost could scale quickly and become impractical.
 
 By contrast:
 
@@ -75,12 +75,12 @@ By contrast:
 
 ### 3. Optional Participation Model
 
-Not all users have or want AI installed locally.
+Not all users have or want AI installed locally, or use AI at all.
 
 This approach is intentionally **non-mandatory**:
 
-- Users with no local AI → NPCs simply do not appear or respond
-- Users with local AI → full NPC interaction becomes available
+- Users with no AI (local or Cloud) → NPCs simply do not appear or respond
+- Users with AI (local or Cloud) → full NPC interaction becomes available
 
 This avoids:
 - Broken experiences for non-AI users
@@ -93,7 +93,7 @@ This avoids:
 
 The system is designed to be **backend-agnostic**, supporting multiple local or API-compatible AI providers:
 
-- Ollama (local models)
+- Ollama (local or cloud models)
 - OpenAI-compatible local endpoints
 - Future custom runtimes
 
@@ -136,7 +136,7 @@ This makes each NPC:
 ### AI Flow
 
 1. Player interacts with NPC
-2. Script checks for local AI availability
+2. Script checks for AI availability
 3. If available:
    - Sends prompt + personality + context to local model
 4. AI generates response
@@ -150,11 +150,11 @@ This makes each NPC:
 
 ### ✔ Privacy-Preserving
 
-No conversation data leaves the user’s device.
+No conversation data leaves the user’s device if the user use Local AI.
 
 ### ✔ Cost-Free at Scale
 
-No server-side inference costs or API usage fees.
+No server-side inference costs or API usage fees. (if local is used or a free Tier cloud model)
 
 ### ✔ Highly Scalable Worlds
 
@@ -205,8 +205,8 @@ This system is particularly suited for:
 
 ## Conclusion
 
-The **Optional Local AI Non-Player Character system** provides a balanced alternative to centralized AI NPC architectures. It embraces a simple principle:
+The **Optional AI Non-Player Character system** provides a balanced alternative to centralized AI NPC architectures. It embraces a simple principle:
 
-> AI-driven characters should be optional, local, and user-controlled.
+> AI-driven characters should be optional, local api to local or cloud AI model, and user-controlled.
 
 By combining lightweight in-world entities with optional local inference (such as Ollama or OpenAI-compatible APIs), this approach enables rich, immersive NPC ecosystems while respecting privacy, reducing costs, and maximizing accessibility.
