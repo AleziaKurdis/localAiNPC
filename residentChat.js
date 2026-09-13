@@ -207,6 +207,10 @@
 
     function getAvailableOllamaModel() {
         const preferred = [
+            "gpt-oss:120b-cloud",
+            "gpt-oss:20b-cloud",
+            "gpt-oss:120b",
+            "gpt-oss:20b",
             "llama3:8b",
             "llama3",
             "mistral",
@@ -278,10 +282,10 @@
 
     function getAvailableOpenAIModel() {
         const preferred = [
+            "gpt-oss",
             "llama3",
             "mistral",
-            "phi3",
-            "gpt-oss"
+            "phi3"
         ];
 
         var xhr = new XMLHttpRequest();
@@ -529,7 +533,7 @@
                 stopTyping();
                 typing = false;
             }
-        }, 10000); //10 sec
+        }, 30000); //30 sec
     }
 
     function npcSpeak(reply, npcName) {
@@ -562,7 +566,8 @@
             "prompt": prompt,
             "stream": false,
             "options": {
-                "temperature": temperature
+                "temperature": temperature,
+                "num_predict": 80
             }
         }));
     }
