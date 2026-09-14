@@ -567,7 +567,7 @@
             "stream": false,
             "options": {
                 "temperature": temperature,
-                "num_predict": 80
+                "num_predict": 200
             }
         }));
     }
@@ -626,7 +626,7 @@
                 }
             ],
             "temperature": temperature,
-            "max_tokens": 80,
+            "max_tokens": 200,
             "stream": false,
             "stop": [avatarDisplayName + ":"]
         }));
