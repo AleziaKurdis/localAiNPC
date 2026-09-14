@@ -556,7 +556,7 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var data = JSON.parse(xhr.responseText);
                 var reply = (data.response || "").trim();
-                print("REPLY: " + reply);
+                //print("REPLY: " + reply);
                 npcSpeak(reply, npcName);
             }
         };
